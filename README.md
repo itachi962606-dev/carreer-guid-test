@@ -9,6 +9,8 @@ Navix-career-ai/
 ├── api/
 │   └── index.js             Vercel serverless entrypoint for the Express API
 ├── vercel.json              Vercel build and routing configuration
+├── package.json              Root runtime dependencies used by Vercel
+├── package-lock.json         Locked root runtime dependencies
 ├── backend/
 │   ├── server.js            Express API that proxies chat turns to Gemini
 │   ├── package.json
@@ -84,9 +86,10 @@ npm start
 
 ## 3. Deploying to Vercel
 
-Deploy the repository root, not the `frontend` directory. The included
-`vercel.json` serves the static frontend and routes `/api/*` to the Express
-serverless function.
+Deploy the repository root, not the `frontend` directory. The root
+`package.json` ensures Vercel installs the dependencies required while loading
+`api/index.js`, and the included `vercel.json` serves the static frontend and
+routes `/api/*` to the Express serverless function.
 
 In Vercel Project Settings:
 
