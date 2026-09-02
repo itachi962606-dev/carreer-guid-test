@@ -8,7 +8,6 @@ Built with plain HTML/CSS/JS with a **Light Pastel Glassmorphism** design on the
 Navix-career-ai/
 ├── api/
 │   └── index.js             Vercel serverless entrypoint for the Express API
-│   └── [...path].js          Catch-all mapping for every /api/... endpoint
 ├── vercel.json              Vercel build and routing configuration
 ├── backend/
 │   ├── server.js            Express API that proxies chat turns to Gemini
