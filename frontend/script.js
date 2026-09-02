@@ -18,7 +18,9 @@ import {
   // -----------------------------------------------------------------------
   // Config & State
   // -----------------------------------------------------------------------
-  const API_BASE = window.Navix_API_BASE || "http://localhost:5000";
+  const isLocalDevelopment = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+  const API_BASE =
+    window.Navix_API_BASE || (isLocalDevelopment ? "http://localhost:5000" : "");
   const STORAGE_KEY = "Navix_session_id";
 
   let currentUser = null;

@@ -462,10 +462,14 @@ app.use("/api", (req, res) => {
   res.status(404).json({ error: "Not found." });
 });
 
-app.listen(PORT, () => {
-  console.log(`Navix backend running on http://localhost:${PORT}`);
-  console.log(`Gemini model: ${GEMINI_MODEL}`);
-  if (!GEMINI_API_KEY) {
-    console.warn("WARNING: GEMINI_API_KEY is not set. Copy .env.example to .env and add your key.");
-  }
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Navix backend running on http://localhost:${PORT}`);
+    console.log(`Gemini model: ${GEMINI_MODEL}`);
+    if (!GEMINI_API_KEY) {
+      console.warn("WARNING: GEMINI_API_KEY is not set. Copy .env.example to .env and add your key.");
+    }
+  });
+}
+
+module.exports = app;

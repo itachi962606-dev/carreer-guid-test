@@ -6,6 +6,9 @@ Built with plain HTML/CSS/JS with a **Light Pastel Glassmorphism** design on the
 
 ```
 Navix-career-ai/
+├── api/
+│   └── index.js             Vercel serverless entrypoint for the Express API
+├── vercel.json              Vercel build and routing configuration
 ├── backend/
 │   ├── server.js            Express API that proxies chat turns to Gemini
 │   ├── package.json
@@ -31,19 +34,22 @@ Navix-career-ai/
 3. Enable **Cloud Firestore** in the Firebase Console in production or test mode.
 4. Apply the security rules from `firestore.rules` in your Firebase Console Firestore Rules tab.
 5. In Project Settings &rarr; General &rarr; **Your apps**, register a Web App and copy your `firebaseConfig` object.
-6. Paste your credentials into `frontend/firebase-config.js`:
+6. Paste your Firebase web app configuration into `frontend/firebase-config.js`:
 
 ```javascript
 const defaultFirebaseConfig = {
-  apiKey: "AIzaSyAvpvznO6bS5-N7Kqlisw5r9ehteIH_Y2c",
-  authDomain: "student-attendece-11.firebaseapp.com",
-  projectId: "student-attendece-11",
-  storageBucket: "student-attendece-11.firebasestorage.app",
-  messagingSenderId: "495290131606",
-  appId: "1:495290131606:web:bcfcfe3d7b4477a7678eb7",
-  measurementId: "G-HL68FMC506",
+  apiKey: "your_firebase_web_api_key",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.firebasestorage.app",
+  messagingSenderId: "your_sender_id",
+  appId: "your_app_id",
 };
 ```
+
+The Firebase web API key is a public client identifier required by Firebase and
+is protected by Firebase Authentication, authorized domains, and Firestore
+rules. Never place the private Gemini key in frontend files.
 
 ---
 
@@ -63,6 +69,7 @@ Open `backend/.env` and paste your key:
 ```ini
 GEMINI_API_KEY=your_actual_key_here
 GEMINI_MODEL=gemini-3.6-flash
+GEMINI_FALLBACK_MODELS=gemini-3.5-flash-lite,gemini-flash-lite-latest
 PORT=5000
 ALLOWED_ORIGINS=http://localhost:5500,http://127.0.0.1:5500,http://localhost:3000
 ```
@@ -75,7 +82,38 @@ npm start
 
 ---
 
-## 3. Running the Frontend
+## 3. Deploying to Vercel
+
+Deploy the repository root, not the `frontend` directory. The included
+`vercel.json` serves the static frontend and routes `/api/*` to the Express
+serverless function.
+
+In Vercel Project Settings:
+
+- **Root Directory:** repository root (`tamizh-career-ai`)
+- **Framework Preset:** Other
+- **Build Command:** leave empty
+- **Output Directory:** leave empty
+- **Install Command:** use the value from `vercel.json`, or leave the project setting empty
+
+Add these Environment Variables for Production, Preview, and Development:
+
+```ini
+GEMINI_API_KEY=your_private_gemini_key
+GEMINI_MODEL=gemini-3.6-flash
+GEMINI_FALLBACK_MODELS=gemini-3.5-flash-lite,gemini-flash-lite-latest
+ALLOWED_ORIGINS=*
+```
+
+Redeploy after adding or changing environment variables. Open `/login.html` on
+the deployed domain. Add the Vercel production and preview domains to Firebase
+Authentication > Settings > Authorized domains, and configure the Google OAuth
+provider with the same domains if Google sign-in is enabled.
+
+Do not set Vercel Root Directory to `frontend`; that prevents Vercel from
+including `api/index.js` and `backend/server.js`, which makes the API unavailable.
+
+## 4. Running the Frontend
 
 The frontend uses standard static web technologies with modular Firebase SDK imports (zero build step needed).
 
