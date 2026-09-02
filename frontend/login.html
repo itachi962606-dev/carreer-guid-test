@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Welcome to Navix — Sign In & Start Your Career Journey</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-body">
+
+<!-- Ambient Light Mesh Background Orbs -->
+<div class="ambient-background" aria-hidden="true">
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
+  <div class="ambient-orb orb-4"></div>
+  <div class="ambient-grid"></div>
+</div>
+
+<!-- Initial Auth Loading Splash (Prevents UI Flicker) -->
+<div class="auth-splash-screen" id="authSplash">
+  <div class="splash-content">
+    <div class="splash-mascot-box">
+      <!-- Mini Animated Pixel Mascot -->
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="splash-robot-svg">
+        <rect x="19" y="3" width="2" height="4" rx="1" fill="#8B5CF6"/>
+        <circle cx="20" cy="3" r="2.5" fill="#A78BFA" class="pulse-antenna"/>
+        <rect x="7" y="7" width="26" height="18" rx="6" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="1.8"/>
+        <rect x="9" y="9" width="22" height="14" rx="4" fill="#1E1B4B"/>
+        <rect x="13" y="13" width="4" height="5" rx="1.5" fill="#38BDF8" class="navix-eye"/>
+        <rect x="23" y="13" width="4" height="5" rx="1.5" fill="#38BDF8" class="navix-eye"/>
+        <path d="M18 19 Q20 20.5 22 19" stroke="#38BDF8" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        <rect x="11" y="27" width="18" height="9" rx="4" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="1.5"/>
+        <circle cx="20" cy="31.5" r="2" fill="#38BDF8" class="core-glow"/>
+      </svg>
+    </div>
+    <div class="splash-text">
+      <span class="splash-title">Navix</span>
+      <span class="splash-subtitle">Checking authentication…</span>
+    </div>
+    <div class="splash-spinner"></div>
+  </div>
+</div>
+
+<!-- Main Auth Portal Wrapper -->
+<div class="auth-page-wrapper" id="authPage" style="display: none;">
+  
+  <!-- Left/Top: Brand Hero & AI Welcome Experience -->
+  <section class="auth-hero-section">
+    
+    <div class="auth-brand-badge">
+      <div class="brand-sparkle-dot"></div>
+      <span>AI Career Guidance Platform</span>
+    </div>
+
+    <!-- Animated Navix Mascot Hero -->
+    <div class="auth-mascot-container">
+      <div class="mascot-floating-pill pill-top">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="pill-icon">
+          <path d="M8 1.5L9.5 6L14 7.5L9.5 9L8 13.5L6.5 9L2 7.5L6.5 6L8 1.5Z" fill="#8B5CF6"/>
+        </svg>
+        <span>Career Roadmap AI</span>
+      </div>
+
+      <div class="mascot-floating-pill pill-bottom">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="pill-icon">
+          <circle cx="8" cy="8" r="6" stroke="#0EA5E9" stroke-width="1.5"/>
+          <path d="M6 8L7.5 9.5L10.5 6.5" stroke="#0EA5E9" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>Personalized Insights</span>
+      </div>
+
+      <div class="auth-mascot-frame" id="mascotFrame">
+        <!-- Interactive Pixel-Art Navix Mascot SVG -->
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="auth-navix-robot" id="authRobotSvg">
+          <!-- Ambient Glow Circle -->
+          <circle cx="32" cy="32" r="28" fill="url(#authAura)" opacity="0.6"/>
+          
+          <!-- Antenna -->
+          <rect x="30.5" y="4" width="3" height="8" rx="1.5" fill="#8B5CF6"/>
+          <circle cx="32" cy="4" r="4" fill="#A78BFA" class="pulse-antenna" id="robotAntenna"/>
+          <circle cx="32" cy="4" r="1.5" fill="#FFFFFF"/>
+          
+          <!-- Head Shell -->
+          <rect x="12" y="12" width="40" height="28" rx="10" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2.2"/>
+          <rect x="16" y="16" width="32" height="20" rx="6" fill="#0F172A"/>
+          
+          <!-- Ears / Side Pods -->
+          <rect x="7" y="20" width="5" height="12" rx="2.5" fill="#C4B5FD"/>
+          <rect x="52" y="20" width="5" height="12" rx="2.5" fill="#C4B5FD"/>
+          
+          <!-- Eyes -->
+          <rect x="22" y="22" width="6" height="7" rx="2" fill="#38BDF8" class="auth-robot-eye eye-left" id="robotEyeL"/>
+          <rect x="36" y="22" width="6" height="7" rx="2" fill="#38BDF8" class="auth-robot-eye eye-right" id="robotEyeR"/>
+          <rect x="24" y="23.5" width="2" height="2" fill="#FFFFFF"/>
+          <rect x="38" y="23.5" width="2" height="2" fill="#FFFFFF"/>
+          
+          <!-- Cheeks Blush -->
+          <circle cx="20" cy="29" r="2" fill="#F472B6" opacity="0.85"/>
+          <circle cx="44" cy="29" r="2" fill="#F472B6" opacity="0.85"/>
+          
+          <!-- Cute Smile / Mouth Expression -->
+          <path d="M28 29 Q32 32 36 29" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round" fill="none" id="robotMouth"/>
+          
+          <!-- Neck -->
+          <rect x="27" y="40" width="10" height="3" rx="1.5" fill="#C4B5FD"/>
+          
+          <!-- Body -->
+          <rect x="18" y="43" width="28" height="13" rx="6" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2"/>
+          <!-- Wave Arm (Left) -->
+          <path d="M18 47 Q12 43 10 39" stroke="#8B5CF6" stroke-width="2.2" stroke-linecap="round" class="robot-wave-arm"/>
+          <!-- Core Jewel Light -->
+          <circle cx="32" cy="49.5" r="3" fill="#38BDF8" class="core-glow"/>
+          <circle cx="32" cy="49.5" r="1.2" fill="#FFFFFF"/>
+          
+          <!-- Hover Jet Glow -->
+          <ellipse cx="32" cy="58" rx="9" ry="2.5" fill="#8B5CF6" opacity="0.45" class="hover-shadow"/>
+          
+          <defs>
+            <radialGradient id="authAura" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
+              <stop stop-color="#DDD6FE" stop-opacity="0.8"/>
+              <stop offset="0.7" stop-color="#E0F2FE" stop-opacity="0.4"/>
+              <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Welcome Content -->
+    <div class="auth-hero-text">
+      <h1 class="auth-hero-title">Welcome to <span class="navix-gradient-text">Navix</span></h1>
+      <p class="auth-hero-tagline">Your personal AI career guidance companion.</p>
+      <p class="auth-hero-desc">
+        Discover career paths, explore in-demand skills, get personalized mentorship, and build your step-by-step career roadmap with intelligent AI guidance.
+      </p>
+    </div>
+
+    <div class="auth-feature-pills">
+      <div class="feature-item">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="feature-icon">
+          <path d="M10 2L12.5 7.5L18 8.5L14 12.5L15 18L10 15L5 18L6 12.5L2 8.5L7.5 7.5L10 2Z" stroke="#8B5CF6" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+        <span>Grounded Recommendations</span>
+      </div>
+      <div class="feature-item">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="feature-icon">
+          <rect x="3" y="4" width="14" height="13" rx="3" stroke="#0EA5E9" stroke-width="1.6"/>
+          <path d="M7 8H13M7 12H11" stroke="#0EA5E9" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span>Secure Private History</span>
+      </div>
+      <div class="feature-item">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="feature-icon">
+          <path d="M10 3V17M3 10H17" stroke="#10B981" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span>Free Tier Gemini Powered</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right/Bottom: Glassmorphism Authentication Card -->
+  <section class="auth-card-section">
+    <div class="auth-card" id="authCard">
+      
+      <!-- Feedback / Error Banner -->
+      <div class="auth-alert-banner" id="authAlert" hidden>
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="alert-icon">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M10 6V11M10 14H10.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <span class="alert-message" id="authAlertText">Error message here</span>
+      </div>
+
+      <!-- ==================== SIGN IN VIEW ==================== -->
+      <div class="auth-view" id="signInView">
+        <div class="auth-header">
+          <h2>Welcome back</h2>
+          <p>Continue your personalized career journey with Navix.</p>
+        </div>
+
+        <!-- Google Continue Button -->
+        <button type="button" class="btn-google-auth" id="googleSignInBtn">
+          <svg viewBox="0 0 24 24" class="google-icon" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+
+        <div class="auth-divider">
+          <span>or sign in with email</span>
+        </div>
+
+        <!-- Email & Password Form -->
+        <form class="auth-form" id="signInForm">
+          <div class="form-group">
+            <label for="signInEmail">Email address</label>
+            <div class="input-container">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="input-icon">
+                <rect x="3" y="5" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M4 6.5L10 11L16 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <input type="email" id="signInEmail" placeholder="you@example.com" required autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="label-with-action">
+              <label for="signInPassword">Password</label>
+              <button type="button" class="text-link" id="forgotPasswordLink">Forgot password?</button>
+            </div>
+            <div class="input-container">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="input-icon">
+                <rect x="4" y="9" width="12" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M7 9V6a3 3 0 016 0v3" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              <input type="password" id="signInPassword" placeholder="••••••••" required autocomplete="current-password" />
+              <button type="button" class="btn-toggle-pw" aria-label="Toggle password visibility" data-target="signInPassword">
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="pw-eye-icon">
+                  <path d="M10 4.5C5.5 4.5 2 10 2 10s3.5 5.5 8 5.5 8-5.5 8-5.5-3.5-5.5-8-5.5z" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-auth-primary" id="signInSubmitBtn">
+            <span class="btn-label">Sign In</span>
+            <div class="btn-spinner" hidden></div>
+          </button>
+        </form>
+
+        <div class="auth-footer-nav">
+          <span>New to Navix?</span>
+          <button type="button" class="switch-link" id="goToSignUpBtn">Create an account</button>
+        </div>
+      </div>
+
+      <!-- ==================== SIGN UP VIEW ==================== -->
+      <div class="auth-view" id="signUpView" style="display: none;">
+        <div class="auth-header">
+          <h2>Create account</h2>
+          <p>Join Navix to explore career paths and save your personalized roadmaps.</p>
+        </div>
+
+        <!-- Google Continue Button for Sign Up -->
+        <button type="button" class="btn-google-auth" id="googleSignUpBtn">
+          <svg viewBox="0 0 24 24" class="google-icon" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+
+        <div class="auth-divider">
+          <span>or create with email</span>
+        </div>
+
+        <form class="auth-form" id="signUpForm">
+          <div class="form-group">
+            <label for="signUpName">Full name</label>
+            <div class="input-container">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="input-icon">
+                <circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <input type="text" id="signUpName" placeholder="Alex Morgan" required autocomplete="name" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signUpEmail">Email address</label>
+            <div class="input-container">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="input-icon">
+                <rect x="3" y="5" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M4 6.5L10 11L16 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <input type="email" id="signUpEmail" placeholder="you@example.com" required autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signUpPassword">Password</label>
+            <div class="input-container">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="input-icon">
+                <rect x="4" y="9" width="12" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M7 9V6a3 3 0 016 0v3" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              <input type="password" id="signUpPassword" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password" />
+              <button type="button" class="btn-toggle-pw" aria-label="Toggle password visibility" data-target="signUpPassword">
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="pw-eye-icon">
+                  <path d="M10 4.5C5.5 4.5 2 10 2 10s3.5 5.5 8 5.5 8-5.5 8-5.5-3.5-5.5-8-5.5z" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signUpConfirmPassword">Confirm password</label>
+            <div class="input-container">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="input-icon">
+                <path d="M5 10.5L8.5 14L15 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <input type="password" id="signUpConfirmPassword" placeholder="Re-enter password" required minlength="6" autocomplete="new-password" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-auth-primary" id="signUpSubmitBtn">
+            <span class="btn-label">Create Account</span>
+            <div class="btn-spinner" hidden></div>
+          </button>
+        </form>
+
+        <div class="auth-footer-nav">
+          <span>Already have an account?</span>
+          <button type="button" class="switch-link" id="goToSignInBtn">Sign in</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- ==================== FORGOT PASSWORD MODAL ==================== -->
+<div class="modal-backdrop" id="forgotModalBackdrop" hidden style="display: none;">
+  <div class="auth-modal" role="dialog" aria-labelledby="forgotModalTitle" aria-modal="true">
+    <button type="button" class="modal-close-icon" id="closeForgotModalBtn" aria-label="Close modal">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    
+    <div class="modal-header">
+      <div class="modal-badge-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="10" width="16" height="10" rx="3" stroke="#8B5CF6" stroke-width="1.8"/>
+          <path d="M8 10V7a4 4 0 118 0v3" stroke="#8B5CF6" stroke-width="1.8"/>
+        </svg>
+      </div>
+      <h3 id="forgotModalTitle">Reset your password</h3>
+      <p>Enter your registered email address and Navix will send you a secure link to reset your password.</p>
+    </div>
+
+    <!-- Modal Alert Banner -->
+    <div class="auth-alert-banner" id="modalAlert" hidden>
+      <span class="alert-message" id="modalAlertText"></span>
+    </div>
+
+    <form id="forgotPasswordForm">
+      <div class="form-group">
+        <label for="forgotEmail">Email address</label>
+        <div class="input-container">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="input-icon">
+            <rect x="3" y="5" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 6.5L10 11L16 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input type="email" id="forgotEmail" placeholder="you@example.com" required />
+        </div>
+      </div>
+
+      <button type="submit" class="btn-auth-primary" id="forgotSubmitBtn">
+        <span class="btn-label">Send Reset Link</span>
+        <div class="btn-spinner" hidden></div>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="login.js"></script>
+</body>
+</html>

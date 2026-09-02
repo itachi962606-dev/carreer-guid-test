@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Navix — AI Career Guidance</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Initial Auth Shield Loading Screen (Prevents UI Flicker / Unauthorized Peek) -->
+<div class="auth-splash-screen" id="appAuthSplash">
+  <div class="splash-content">
+    <div class="splash-mascot-box">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="splash-robot-svg">
+        <rect x="19" y="3" width="2" height="4" rx="1" fill="#8B5CF6"/>
+        <circle cx="20" cy="3" r="2.5" fill="#A78BFA" class="pulse-antenna"/>
+        <rect x="7" y="7" width="26" height="18" rx="6" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="1.8"/>
+        <rect x="9" y="9" width="22" height="14" rx="4" fill="#1E1B4B"/>
+        <rect x="13" y="13" width="4" height="5" rx="1.5" fill="#38BDF8" class="navix-eye"/>
+        <rect x="23" y="13" width="4" height="5" rx="1.5" fill="#38BDF8" class="navix-eye"/>
+        <path d="M18 19 Q20 20.5 22 19" stroke="#38BDF8" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        <rect x="11" y="27" width="18" height="9" rx="4" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="1.5"/>
+        <circle cx="20" cy="31.5" r="2" fill="#38BDF8" class="core-glow"/>
+      </svg>
+    </div>
+    <div class="splash-text">
+      <span class="splash-title">Navix</span>
+      <span class="splash-subtitle">Loading your career workspace…</span>
+    </div>
+    <div class="splash-spinner"></div>
+  </div>
+</div>
+
+<!-- Ambient Light Mesh Background Orbs -->
+<div class="ambient-background" aria-hidden="true">
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
+  <div class="ambient-orb orb-4"></div>
+  <div class="ambient-grid"></div>
+</div>
+
+<div class="app" id="app" style="display: none;">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand">
+        <span class="brand-icon" id="brandIcon" aria-hidden="true">
+          <!-- Pixel-Art Navix Robot SVG -->
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="navix-svg-mascot navix-idle">
+            <!-- Antenna -->
+            <rect x="19" y="3" width="2" height="4" rx="1" fill="#8B5CF6"/>
+            <circle cx="20" cy="3" r="2.5" fill="#A78BFA" class="pulse-antenna"/>
+            <circle cx="20" cy="3" r="1" fill="#FFFFFF"/>
+            
+            <!-- Head Shell -->
+            <rect x="7" y="7" width="26" height="18" rx="6" fill="#F8FAFC" stroke="#8B5CF6" stroke-width="1.8"/>
+            <rect x="9" y="9" width="22" height="14" rx="4" fill="#1E1B4B"/>
+            
+            <!-- Ears -->
+            <rect x="4" y="12" width="3" height="8" rx="1.5" fill="#C4B5FD"/>
+            <rect x="33" y="12" width="3" height="8" rx="1.5" fill="#C4B5FD"/>
+            
+            <!-- Visor Screen -->
+            <rect x="10" y="10" width="20" height="12" rx="3" fill="#0F172A"/>
+            <!-- Pixel Eyes -->
+            <rect x="13" y="13" width="4" height="5" rx="1.5" fill="#38BDF8" class="navix-eye eye-left"/>
+            <rect x="23" y="13" width="4" height="5" rx="1.5" fill="#38BDF8" class="navix-eye eye-right"/>
+            <rect x="14" y="14" width="1.5" height="1.5" fill="#FFFFFF"/>
+            <rect x="24" y="14" width="1.5" height="1.5" fill="#FFFFFF"/>
+            <!-- Smile -->
+            <path d="M18 19 Q20 20.5 22 19" stroke="#38BDF8" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+            <circle cx="12" cy="18" r="1" fill="#F472B6" opacity="0.8"/>
+            <circle cx="28" cy="18" r="1" fill="#F472B6" opacity="0.8"/>
+            
+            <!-- Neck joint -->
+            <rect x="17" y="25" width="6" height="2" rx="1" fill="#C4B5FD"/>
+            
+            <!-- Hover Body -->
+            <rect x="11" y="27" width="18" height="9" rx="4" fill="#F8FAFC" stroke="#8B5CF6" stroke-width="1.5"/>
+            <circle cx="20" cy="31.5" r="2" fill="#38BDF8" class="core-glow"/>
+            <circle cx="20" cy="31.5" r="0.8" fill="#FFFFFF"/>
+            <ellipse cx="20" cy="37.5" rx="5" ry="1.5" fill="#8B5CF6" opacity="0.4" class="hover-shadow"/>
+          </svg>
+        </span>
+        <div class="brand-text">
+          <span class="brand-name">Navix</span>
+          <span class="brand-tag">Career Guidance AI</span>
+        </div>
+      </div>
+      <button class="icon-btn sidebar-close" id="sidebarCloseBtn" aria-label="Close sidebar">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- New Conversation Button -->
+    <button class="new-chat-btn" id="newChatBtn">
+      <div class="btn-shine"></div>
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span>New conversation</span>
+    </button>
+
+    <!-- Sidebar Scrollable Middle Body -->
+    <div class="sidebar-scroll-body">
+      
+      <!-- Previous Conversations Section (Firestore Persistence) -->
+      <div class="sidebar-section conversations-section">
+        <h3 class="sidebar-heading">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="heading-icon">
+            <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Previous Chats
+        </h3>
+        <div class="conversations-container">
+          <ul class="conversations-list" id="conversationsList">
+            <li class="conversations-empty" id="conversationsEmpty">No saved conversations yet.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Try Asking Section -->
+      <div class="sidebar-section">
+        <h3 class="sidebar-heading">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="heading-icon">
+            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Try asking
+        </h3>
+        <ul class="prompt-list" id="promptList">
+          <li data-prompt="I just finished 12th grade with computer science. What careers suit me?">
+            <span class="prompt-bullet"></span>
+            <span>Careers after 12th (CS)</span>
+          </li>
+          <li data-prompt="I have a B.Tech in mechanical engineering but I enjoy coding more than core mechanical work. What are my options?">
+            <span class="prompt-bullet"></span>
+            <span>Switch from core to tech</span>
+          </li>
+          <li data-prompt="I know Python, SQL and basic data analysis. What roles can I target as a fresher?">
+            <span class="prompt-bullet"></span>
+            <span>Roles for data fresher</span>
+          </li>
+          <li data-prompt="I want a stable government job after graduation. Guide me on the right path.">
+            <span class="prompt-bullet"></span>
+            <span>Government career roadmap</span>
+          </li>
+          <li data-prompt="I have 3 years of experience in sales and want to move into marketing. Is that realistic?">
+            <span class="prompt-bullet"></span>
+            <span>Career transition guidance</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- What Navix Knows So Far Profile Tracker -->
+      <div class="sidebar-section profile-section">
+        <h3 class="sidebar-heading">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="heading-icon">
+            <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M4 20c0-3.9 3.6-7 8-7s8 3.1 8 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          What Navix knows so far
+        </h3>
+        <div class="profile-card" id="profileCard">
+          <div class="profile-empty" id="profileEmpty">
+            <div class="sparkle-icon" aria-hidden="true">✨</div>
+            <p>Nothing gathered yet. As you chat, Navix notes your education, skills, and goals here.</p>
+          </div>
+          <div class="profile-rows" id="profileRows" hidden></div>
+          <div class="profile-stage" id="profileStage" hidden></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar Bottom (User Account + Actions) -->
+    <div class="sidebar-bottom">
+      
+      <!-- User Profile Card & Logout -->
+      <div class="sidebar-user-card" id="sidebarUserCard">
+        <div class="user-avatar-badge" id="userAvatarBadge">
+          <span id="userAvatarInitials">U</span>
+        </div>
+        <div class="user-info-text">
+          <span class="user-display-name" id="userDisplayName">User</span>
+          <span class="user-email-text" id="userEmailText">user@example.com</span>
+        </div>
+        <button type="button" class="user-logout-btn" id="logoutBtn" title="Log out of Navix" aria-label="Log out">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <button class="ghost-btn" id="clearChatBtn">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 7H20M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2M6 7l1 13a2 2 0 002 2h6a2 2 0 002-2l1-13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Clear this chat</span>
+      </button>
+
+      <div class="sidebar-footnote-box">
+        <span class="gemini-pill">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="gemini-sparkle">
+            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="url(#geminiGrad)"/>
+            <defs>
+              <linearGradient id="geminiGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#8B5CF6"/>
+                <stop offset="1" stop-color="#38BDF8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          Google Gemini AI
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn sidebar-open" id="sidebarOpenBtn" aria-label="Open sidebar">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 7H20M4 12H20M4 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="topbar-brand-mobile" aria-hidden="true">
+        <span class="brand-dot"></span>
+        <span class="topbar-name">Navix</span>
+      </div>
+
+      <div class="topbar-title">
+        <span class="status-dot" id="statusDot"></span>
+        <div>
+          <h1>Navix</h1>
+          <p id="statusText">Connecting…</p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn new-chat-quick-btn" id="mobileNewChatBtn" title="New conversation" aria-label="New conversation">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="chat-area" id="chatArea">
+      <div class="chat-scroll" id="chatScroll">
+
+        <!-- ============ WELCOME EXPERIENCE ============ -->
+        <div class="welcome" id="welcome">
+          <div class="welcome-card">
+            <div class="welcome-robot-wrap">
+              <div class="welcome-floating-decor decor-1">✨</div>
+              <div class="welcome-floating-decor decor-2">🎯</div>
+              <div class="welcome-floating-decor decor-3">🚀</div>
+              
+              <div class="welcome-robot-frame">
+                <!-- Welcome Animated Mascot -->
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="welcome-navix-mascot">
+                  <circle cx="32" cy="32" r="28" fill="url(#welcomeAura)" opacity="0.5"/>
+                  <rect x="30.5" y="5" width="3" height="7" rx="1.5" fill="#8B5CF6"/>
+                  <circle cx="32" cy="5" r="4" fill="#A78BFA" class="pulse-antenna"/>
+                  <circle cx="32" cy="5" r="1.5" fill="#FFFFFF"/>
+                  <rect x="12" y="12" width="40" height="28" rx="10" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2.2"/>
+                  <rect x="16" y="16" width="32" height="20" rx="6" fill="#0F172A"/>
+                  <rect x="7" y="20" width="5" height="12" rx="2.5" fill="#C4B5FD"/>
+                  <rect x="52" y="20" width="5" height="12" rx="2.5" fill="#C4B5FD"/>
+                  <rect x="22" y="22" width="6" height="7" rx="2" fill="#38BDF8" class="welcome-eye eye-left"/>
+                  <rect x="36" y="22" width="6" height="7" rx="2" fill="#38BDF8" class="welcome-eye eye-right"/>
+                  <rect x="24" y="23.5" width="2" height="2" fill="#FFFFFF"/>
+                  <rect x="38" y="23.5" width="2" height="2" fill="#FFFFFF"/>
+                  <circle cx="20" cy="29" r="2" fill="#F472B6" opacity="0.9"/>
+                  <circle cx="44" cy="29" r="2" fill="#F472B6" opacity="0.9"/>
+                  <path d="M28 29 Q32 32 36 29" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                  <rect x="27" y="40" width="10" height="3" rx="1.5" fill="#C4B5FD"/>
+                  <rect x="18" y="43" width="28" height="13" rx="6" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2"/>
+                  <circle cx="32" cy="49.5" r="3" fill="#38BDF8" class="core-glow"/>
+                  <circle cx="32" cy="49.5" r="1.2" fill="#FFFFFF"/>
+                  <ellipse cx="32" cy="58" rx="9" ry="2.5" fill="#8B5CF6" opacity="0.45" class="hover-shadow"/>
+                  <defs>
+                    <radialGradient id="welcomeAura" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
+                      <stop stop-color="#DDD6FE" stop-opacity="0.8"/>
+                      <stop offset="0.7" stop-color="#E0F2FE" stop-opacity="0.4"/>
+                      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+                    </radialGradient>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+
+            <div class="welcome-badge">
+              <span class="sparkle-dot"></span>
+              <span>AI Career Companion</span>
+            </div>
+
+            <h2>Hi! I’m <span class="navix-gradient-text">Navix</span></h2>
+            <p class="welcome-desc">
+              Your personalized AI career guide. Tell me about your background, skills, interests or aspirations, and I will create tailored, grounded career paths just for you.
+            </p>
+
+            <div class="welcome-suggestions">
+              <span class="suggestions-label">Quick topics to start:</span>
+              <div class="welcome-chips">
+                <button class="welcome-chip" data-prompt="I just finished 12th grade with computer science. What careers suit me?">
+                  🎓 Careers after 12th
+                </button>
+                <button class="welcome-chip" data-prompt="I have a B.Tech in mechanical engineering but I enjoy coding more than core mechanical work. What are my options?">
+                  💻 Branch switch to Tech
+                </button>
+                <button class="welcome-chip" data-prompt="I know Python, SQL and basic data analysis. What roles can I target as a fresher?">
+                  📊 Data Fresher Roles
+                </button>
+                <button class="welcome-chip" data-prompt="I want a stable government job after graduation. Guide me on the right path.">
+                  🏛️ Government Exams
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ MESSAGES CONTAINER ============ -->
+        <div class="messages" id="messages"></div>
+
+        <!-- ============ TYPING INDICATOR ============ -->
+        <div class="typing-row" id="typingRow" hidden>
+          <span class="avatar bot-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mini-bot-icon">
+              <rect x="4" y="4" width="16" height="12" rx="4" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="1.5"/>
+              <circle cx="8.5" cy="10" r="1.5" fill="#38BDF8"/>
+              <circle cx="15.5" cy="10" r="1.5" fill="#38BDF8"/>
+              <path d="M10 13 Q12 14.5 14 13" stroke="#8B5CF6" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+              <rect x="7" y="16" width="10" height="5" rx="2" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="1.2"/>
+            </svg>
+          </span>
+          <div class="typing-bubble">
+            <span class="typing-text">Navix is thinking</span>
+            <div class="typing-dots">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ COMPOSER ============ -->
+    <form class="composer" id="composerForm">
+      <div class="composer-inner">
+        <textarea
+          id="messageInput"
+          rows="1"
+          maxlength="2000"
+          placeholder="Tell Navix about your education, skills or interests…"
+          aria-label="Message Navix"
+        ></textarea>
+        <button type="submit" class="send-btn" id="sendBtn" aria-label="Send message">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.4 20.4L20.85 12.92C21.66 12.57 21.66 11.43 20.85 11.08L3.4 3.6C2.74 3.31 2.01 3.8 2.01 4.51L2 9.12C2 9.62 2.37 10.05 2.87 10.11L17 12L2.87 13.88C2.37 13.95 2 14.37 2 14.88L2.01 19.49C2.01 20.2 2.74 20.69 3.4 20.4Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      <p class="composer-hint">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="hint-icon">
+          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M8 5V8.5M8 11.5H8.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        Navix provides tailored career guidance based on your inputs. Not a substitute for professional legal or psychological counselling.
+      </p>
+    </form>
+  </main>
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
